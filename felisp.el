@@ -1,0 +1,56 @@
+;; -*- lexical-binding: t -*-
+
+(defvar felisp-mode-map
+  (let ((map (make-sparse-keymap))
+        (clj-open '(?\( ?\[ ?\{)))
+    (define-key map (kbd "[") (lambda ()
+                                (interactive)
+                                (paredit-backward-up)))
+    (define-key map (kbd "d") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                    (progn
+                                      (paredit-forward-down)
+                                      (paredit-forward-down)
+                                      (paredit-backward-up))
+                                  (insert "d"))))
+    (define-key map (kbd "u") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                  (paredit-backward-up)
+                                  (insert "u"))))
+    (define-key map (kbd "r") (lambda ()
+                                (interactive)
+                                (progn
+                                  (felisp-mode 0)
+                                  (eval-buffer)
+                                  (felisp-mode 1))))
+    (define-key map (kbd "j") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                    (progn
+                                      (paredit-forward)
+                                      (paredit-forward)
+                                      (paredit-backward))
+                                  (insert "j"))))
+    (define-key map (kbd "k") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                    (paredit-backward)
+                                  (insert "k"))))
+    (define-key map (kbd "f") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                    (let ((k (read-char "(l) [v] {m}:")))
+                                      (cond ((eq k ?l) (avy-goto-char ?\())
+                                            ((eq k ?v) (avy-goto-char ?\[))
+                                            ((eq k ?m) (avy-goto-char ?\{))
+                                            ((eq k ?o) (avy-goto-char (read-char "char:" t)))))
+                                  (insert "f"))))
+    (define-key map (kbd "z") 'felisp-mode)
+    map))
+
+(define-minor-mode felisp-mode
+  :global nil
+  :lighter " felisp"
+  :keymap felisp-mode-map)
