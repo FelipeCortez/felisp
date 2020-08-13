@@ -28,6 +28,11 @@
                                             ((eq k ?m) (avy-goto-char ?\{))
                                             ((eq k ?o) (avy-goto-char (read-char "char:" t)))))
                                   (insert "f"))))
+    (define-key map (kbd "i") (lambda ()
+                                (interactive)
+                                (if (member (char-after) clj-open)
+                                    (indent-sexp)
+                                  (insert "i"))))
     map))
 
 (define-minor-mode felisp-mode
