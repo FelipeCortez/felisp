@@ -33,6 +33,12 @@
                                 (if (member (char-after) clj-open)
                                     (indent-sexp)
                                   (insert "i"))))
+    (define-key map (kbd "SPC") (lambda ()
+                                  (interactive)
+                                  (if (eq (char-before) 40)
+                                    (progn (insert " ")
+                                           (backward-char))
+                                  (insert " "))))
     map))
 
 (define-minor-mode felisp-mode
