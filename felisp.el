@@ -64,9 +64,15 @@
     (define-key map [(shift backspace)] (lambda ()
                                           (interactive)
                                           (delete-indentation)))
+    (define-key map (kbd "C-x e") (lambda ()
+                                    (interactive)
+                                    (save-excursion
+                                      (avy-goto-char ?\()
+                                      (sp-forward-sexp)
+                                      (cider-eval-last-sexp))))
     map))
 
-(define-minor-mode felisp-mode
+(define-minor-mode felisp-mode "felisp"
   :global nil
   :lighter " felisp"
   :keymap felisp-mode-map)
